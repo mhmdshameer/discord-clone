@@ -1,8 +1,19 @@
 "use client";
 
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from "../ui/dialog";
-import { useForm } from "react-hook-form";
+
+const formSchema = z.object({
+    name: z.string().min(1, {
+        message: "Server name is required."
+    }),
+    imageUrl: z.string.min(1, min{
+        message: "Server image is required."
+    })
+})
 
 export const InitialModal = () => {
 
