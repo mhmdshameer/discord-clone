@@ -1,4 +1,4 @@
-import { currentUser, redirectToSignIn } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 import prisma from "./db";
 
