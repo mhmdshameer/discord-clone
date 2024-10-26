@@ -1,10 +1,12 @@
 "use client";
 
 import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from "../ui/dialog";
+import { Form } from "../ui/form";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -40,6 +42,15 @@ export const InitialModal = () => {
             Give your server a personality with a name and an image. You can always change it later
           </DialogDescription>
         </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="space-y-8 px-6">
+              <div className="flex items-center justify-center text-center">
+                TODO: Image Upload
+              </div>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
