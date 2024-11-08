@@ -13,6 +13,7 @@ interface FileUploadProps {
 }
 
 export const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
+  console.log("value:", value)
   const fileType = value?.split(".").pop();
   if (value && fileType !== "pdf") {
     return (
@@ -33,11 +34,11 @@ export const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
       <UploadDropzone
         endpoint={endpoint}
         onClientUploadComplete={(res) => {
-          console.log(res);
+          console.log("res",res);
           onChange(res?.[0].url);
         }}
         onUploadError={(error: Error) => {
-          console.log(error);
+          console.log("error Dropzone",error);
         }}
       />
     </div>

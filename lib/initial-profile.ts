@@ -1,17 +1,16 @@
 import { currentUser } from "@clerk/nextjs/server";
-
 import prisma from "./db";
 
 export const initialProfile = async () => {
     const user = await currentUser();
 
     if(!user) {
-        return redirectToSignIn
+        return redirectToSignIn();
     }
 
     const profile = await prisma.profile.findUnique({
         where:  {
-            userId: user.id
+            userId: user?.id
         }
     })
 
@@ -19,10 +18,10 @@ export const initialProfile = async () => {
     
     const newProfile = await prisma.profile.create({
         data : {
-            userId: user.id,
-            name:`${user.firstName} ${user.lastName}`,
-            imageUrl: user.imageUrl,
-            email: user.emailAddresses[0].emailAddress
+            userId: user?.id,
+            name:`${user?.firstName} ${user.lastName}`,
+            imageUrl: user?.imageUrl,
+            email: user?.emailAddresses[0].emailAddress
         }
     })
 

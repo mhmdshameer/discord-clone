@@ -24,7 +24,7 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
-import { FileUpload } from "../file-upload";
+import { FileUpload } from "@/components/file-upload";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -38,12 +38,13 @@ const formSchema = z.object({
 
 export const InitialModal = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const router = useRouter;
 
+  const router = useRouter;
+  
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
+  
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,12 +53,16 @@ export const InitialModal = () => {
     },
   });
 
+  
   const isLoading = form.formState.isSubmitting;
 
+  if(isLoading){  console.log(form)}
+  
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("hello", values);
     try {
       await axios.post("/api/servers", values);
-
+      
       form.reset();
       router.refresh();
       window.location.reload();
@@ -93,8 +98,8 @@ export const InitialModal = () => {
                       <FormControl>
                         <FileUpload
                           endpoint="serverImage"
-                          value={field.value}
-                          onChange={field.onChange}
+                          value={field?.value}
+                          onChange={field?.onChange}
                         />
                       </FormControl>
                     </FormItem>
