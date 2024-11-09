@@ -4,9 +4,8 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-
-import { DialogTitle } from "@radix-ui/react-dialog";
 import {
+  DialogTitle,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -39,7 +38,7 @@ const formSchema = z.object({
 export const InitialModal = () => {
   const [isMounted, setIsMounted] = useState(false);
 
-  const router = useRouter;
+  const router = useRouter();
   
   useEffect(() => {
     setIsMounted(true);
@@ -117,7 +116,7 @@ export const InitialModal = () => {
                     <FormControl>
                       <Input
                         disabled={isLoading}
-                        className="bg-zinc-500/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
                         placeholder="Enter server name"
                         {...field}
                       />

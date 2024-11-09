@@ -1,7 +1,7 @@
 import { currentProfile } from "@/lib/current-profile";
 import prisma from "@/lib/db";
-import { redirect } from "next/dist/server/api-utils";
 import { NavigationAction } from "./navigation-action";
+import { redirect } from "next/navigation";
 
 export const NavigationSidebar = async () => {
   const profile = await currentProfile();
