@@ -54,8 +54,6 @@ export const InitialModal = () => {
 
   
   const isLoading = form.formState.isSubmitting;
-
-  if(isLoading){  console.log(form)}
   
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("hello", values);
