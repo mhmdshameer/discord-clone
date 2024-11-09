@@ -7,7 +7,7 @@ export const currentProfile = async () => {
 
   const profile = await prisma.profile.findUnique({
     where: {
-        userId: userId
+        userId
     }
   })
     return profile;
