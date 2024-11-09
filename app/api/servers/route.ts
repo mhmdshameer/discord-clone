@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 export async function POST(req: Request) {
   try {
     const { name, imageUrl } = await req.json();
-    const profile = await currentProfile;
+    const profile = await currentProfile();
 
     if (!profile) {
       return new NextResponse("unauthorized", { status: 401 });
