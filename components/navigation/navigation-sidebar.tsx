@@ -29,7 +29,11 @@ export const NavigationSidebar = async () => {
       <ScrollArea>
         {servers.map((server)=>(
         <div key={server.id}>
-          <NavigationItem/>
+          <NavigationItem
+          id={server.id}
+          name={server.name}
+          imageUrl={server.imageUrl}
+          />
         </div>
       ))}
       </ScrollArea>
