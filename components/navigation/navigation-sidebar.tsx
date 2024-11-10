@@ -4,6 +4,7 @@ import { NavigationAction } from "./navigation-action";
 import { redirect } from "next/navigation";
 import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
+import { NavigationItem } from "./navigation-item";
 
 export const NavigationSidebar = async () => {
   const profile = await currentProfile();
@@ -28,7 +29,7 @@ export const NavigationSidebar = async () => {
       <ScrollArea>
         {servers.map((server)=>(
         <div key={server.id}>
-          {server.name}
+          <NavigationItem/>
         </div>
       ))}
       </ScrollArea>
