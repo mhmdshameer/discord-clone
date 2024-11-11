@@ -1,11 +1,12 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { RedirectToSignIn } from "@clerk/nextjs";
 import prisma from "./db";
 
 export const initialProfile = async () => {
     const user = await currentUser();
 
     if(!user) {
-        return redirectToSignIn();
+        return RedirectToSignIn({ redirectUrl: "/" });
     }
 
     const profile = await prisma.profile.findUnique({
