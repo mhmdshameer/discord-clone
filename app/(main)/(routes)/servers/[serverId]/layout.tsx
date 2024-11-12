@@ -6,16 +6,15 @@ import { redirect } from "next/navigation";
 
 const ServerIdLayout = async ({
   children,
-  params: paramsPromise,
+  params,
 }: {
   children: React.ReactNode;
   params: { serverId: string };
 }) => {
-  const params = await paramsPromise;
   const profile = await currentProfile();
 
   if (!profile) {
-    return RedirectToSignIn;
+    return <RedirectToSignIn/>;
   }
 
   const server = await prisma.server.findUnique({
@@ -35,7 +34,7 @@ const ServerIdLayout = async ({
   return (
     <div className="h-full">
       <div className="sm:hidden flex h-full w-60 z-20 flex-col fixed inset-y-0">
-        <ServerSidebar/>
+        <ServerSidebar serverId={params.serverId}/>
       </div>
       <main className="h-full md:pl-60">{children}</main>
     </div>
