@@ -4,6 +4,8 @@ import { ServerWithMembersWithProfiles } from "@/types";
 import { DialogTitle, Dialog, DialogContent, DialogHeader, DialogDescription } from "../ui/dialog";
 
 import { useModal } from "@/hooks/use-modal-store";
+import { ScrollArea } from "../ui/scroll-area";
+import { UserAvatar } from "../user-avatar";
 
 export const MembersModal = () => {
   const { onOpen, isOpen, onClose, type, data } = useModal();
@@ -22,9 +24,13 @@ export const MembersModal = () => {
           {server?.members?.length} members
         </DialogDescription>
         </DialogHeader>
-        <div className="p-6">
-          Hello Members
-        </div>
+        <ScrollArea className="mt-8 max-h-[420px] pr-6">
+         {server?.members?.map((member)=> (
+          <div key={member.id} className="flex items-center gap-x-2 mb-6">
+            <UserAvatar/>
+          </div>
+         ))}
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
