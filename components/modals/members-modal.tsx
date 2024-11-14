@@ -8,7 +8,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { UserAvatar } from "../user-avatar";
 import { Check, MoreVertical, Shield, ShieldAlert, ShieldCheck, ShieldQuestion } from "lucide-react";
 import { useState } from "react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 const roleIconMap = {
   "GUEST": null,
@@ -68,9 +68,17 @@ export const MembersModal = () => {
                               <Check className="h-4 w-4 ml-auto"/>
                             )}
                           </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <ShieldCheck className="h-4 w-4 mr-2"/>
+                            Moderator
+                            {member.role === "MODERATOR" && (
+                              <Check className="h-4 w-4 ml-auto"/>
+                            )}
+                          </DropdownMenuItem>
                         </DropdownMenuSubContent>
                       </DropdownMenuPortal>
                     </DropdownMenuSub>
+                    <DropdownMenuSeparator/>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
