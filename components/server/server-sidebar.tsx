@@ -56,6 +56,10 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
     },
   });
 
+  if (!server) {
+    return <div>Server not found.</div>; 
+  }
+
   const textChannels = server?.channels.filter(
     (channel) => channel.type === ChannelType.TEXT
   );
@@ -128,7 +132,12 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                 label="Text Channels"
                 />
                 {textChannels.map((channel)=>(
-                    <ServerChannel/>
+                    <ServerChannel 
+                     key={channel.id}
+                     role={role}
+                     channel={channel}
+                     server={server}
+                    />
                 ))}
             </div>
         )}
