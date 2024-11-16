@@ -141,6 +141,24 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                 ))}
             </div>
         )}
+        {!!audioChannels?.length && (
+            <div className="mb-2">
+                <ServerSection
+                sectionType="channels"
+                channelType={ChannelType.AUDIO}
+                role={role}
+                label="Voice Channels"
+                />
+                {audioChannels.map((channel)=>(
+                    <ServerChannel 
+                     key={channel.id}
+                     role={role}
+                     channel={channel}
+                     server={server}
+                    />
+                ))}
+            </div>
+        )}
       </ScrollArea>
     </div>
   );
