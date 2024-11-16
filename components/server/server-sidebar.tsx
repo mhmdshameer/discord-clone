@@ -159,6 +159,24 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                 ))}
             </div>
         )}
+        {!!videoChannels?.length && (
+            <div className="mb-2">
+                <ServerSection
+                sectionType="channels"
+                channelType={ChannelType.VIDEO}
+                role={role}
+                label="Voice Channels"
+                />
+                {videoChannels.map((channel)=>(
+                    <ServerChannel 
+                     key={channel.id}
+                     role={role}
+                     channel={channel}
+                     server={server}
+                    />
+                ))}
+            </div>
+        )}
       </ScrollArea>
     </div>
   );
