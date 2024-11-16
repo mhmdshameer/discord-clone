@@ -121,7 +121,7 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
         {!!textChannels?.length && (
             <div className="mb-2">
                 <ServerSection
-                sectionType="channel"
+                sectionType="channels"
                 channelType={ChannelType.TEXT}
                 role={role}
                 label="Text Channels"
