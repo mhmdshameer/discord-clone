@@ -165,7 +165,7 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                 sectionType="channels"
                 channelType={ChannelType.VIDEO}
                 role={role}
-                label="Voice Channels"
+                label="Video Channels"
                 />
                 {videoChannels.map((channel)=>(
                     <ServerChannel 
@@ -174,6 +174,19 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                      channel={channel}
                      server={server}
                     />
+                ))}
+            </div>
+        )}
+        {!!members?.length && (
+            <div className="mb-2">
+                <ServerSection
+                sectionType="members"
+                role={role}
+                label="members"
+                server={server}
+                />
+                {members.map((member)=>(
+                   
                 ))}
             </div>
         )}
