@@ -21,7 +21,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useParams, useRouter } from "next/navigation";
+import {useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 import { ChannelType } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -44,7 +44,6 @@ const formSchema = z.object({
 export const EditChannelModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
-  const params = useParams();
 
   const isModalOpen = isOpen && type === "editChannel";
   const {channel,server} = data;
@@ -70,13 +69,13 @@ export const EditChannelModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = queryString.stringifyUrl({
-        url: "/api/channels",
-        query:{
-          serverId: params?.serverId
+        url: `/api/channels/${channel?.id}`,
+        query:{ 
+          serverId: server?.id
         }
       })
       console.log("Values:",values)
-      await axios.post(url, values);
+      await axios.patch(url, values);
 
       form.reset();
       router.refresh();
