@@ -26,6 +26,7 @@ import { useModal } from "@/hooks/use-modal-store";
 import { ChannelType } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import queryString from "query-string";
+import { useEffect } from "react";
 
 
 const formSchema = z.object({
@@ -46,14 +47,23 @@ export const CreateChannelModal = () => {
   const params = useParams();
 
   const isModalOpen = isOpen && type === "createChannel";
+  const {channelType} = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: ChannelType.TEXT,
+      type: channelType || ChannelType.TEXT,
     },
   });
+
+  useEffect(()=>{
+    if(channelType){
+      form.setValue("type",channelType);
+    }else{
+      form.setValue("type",ChannelType.TEXT)
+    }
+  },[channelType,form])
 
   const isLoading = form.formState.isSubmitting;
 
