@@ -38,7 +38,6 @@ const ServerIdPage = async ({ params }: ServerIdPageProps) => {
   });
 
   const initialChannel = server?.channels[0]
-  console.log("Initial Channel",initialChannel)
 
   if(initialChannel?.name !== "general"){
     return null

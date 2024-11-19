@@ -9,7 +9,6 @@ generator client {
 }
 
 
-// Define your models below
 model Profile {
     id       String @id @default(uuid())
     userId   String @unique

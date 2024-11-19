@@ -2,12 +2,12 @@ import prisma from "./db";
 
 export const getOrCreateConversation =async (memberOneId: string, memberTwoId: string) =>{
     let conversation = await findConversation(memberOneId, memberTwoId) || await findConversation(memberTwoId, memberOneId);
-
-if(!conversation){
-    conversation = await createNewConversation(memberOneId, memberTwoId)
-}
-
-return conversation;
+    
+    if(!conversation){
+        conversation = await createNewConversation(memberOneId, memberTwoId)
+    }
+    
+    return conversation;
 }
 
 const findConversation = async (memberOneId: string, memberTwoId: string) => {
@@ -18,15 +18,15 @@ const findConversation = async (memberOneId: string, memberTwoId: string) => {
             AND: [{ memberOneId: memberOneId }, { memberTwoId: memberTwoId }],
           },
           include: {
-            memberOne: {
+              memberOne: {
+                  include: {
+                      profile: true,
+                    },
+                },
+                memberTwo: {
               include: {
                 profile: true,
-              },
             },
-            memberTwo: {
-              include: {
-                profile: true,
-              },
             },
           },
         });
@@ -36,29 +36,33 @@ const findConversation = async (memberOneId: string, memberTwoId: string) => {
 };
 
 const createNewConversation = async (
-  memberOneId: string,
-  memberTwoId: string
+    memberOneId: string,
+    memberTwoId: string
 ) => {
-  try {
-    return await prisma.conversation.create({
-      data: {
-        memberOneId,
-        memberTwoId,
-      },
-      include: {
-        memberOne: {
-          include: {
-            profile: true,
-          },
-        },
-        memberTwo: {
-          include: {
-            profile: true,
-          },
-        },
-      },
-    });
-  } catch {
+    console.log("one:",memberOneId,"two:",memberTwoId)
+    try {
+        const data= await prisma.conversation.create({
+            data: {
+                memberOneId,
+                memberTwoId,
+            },
+            include: {
+                memberOne: {
+                    include: {
+                        profile: true,
+                    },
+                },
+                memberTwo: {
+                    include: {
+                        profile: true,
+                    },
+                },
+            },
+        });
+        console.log("one:",data)
+    return data;
+  } catch (error) {
+    console.log(error);
     return null;
   }
 };
