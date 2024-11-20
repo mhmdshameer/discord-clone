@@ -1,3 +1,5 @@
+'use client'
+
 import { useSocket } from "./providers/socket-providers";
 import { Badge } from "./ui/badge";
 
