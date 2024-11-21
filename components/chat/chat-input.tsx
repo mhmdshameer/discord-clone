@@ -1,13 +1,14 @@
 "use client";
 
+import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { Plus, Smile } from "lucide-react";
 import { Input } from "../ui/input";
-import queryString from "query-string";
-import axios from "axios";
+import qs from "query-string";
+
 
 interface ChatInputProps {
   apiUrl: string;
@@ -21,23 +22,24 @@ const formSchema = z.object({
 });
 
 export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       content: "",
     },
   });
-
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-        const url = queryString.stringifyUrl({
+        const url = qs.stringifyUrl({
             url: apiUrl,
             query,
         });
-
-        await axios.post(url, values);
+    console.log("Url:",url,"Values:",values)
+       await axios.post(url, values)
+    
     } catch (error) {
         console.log(error)
     }
@@ -54,6 +56,7 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                 <div className="relative p-4 pb-6">
                   <button
                     type="button"
+                    disabled={isLoading}
                     onClick={() => {}}
                     className="absolute top-7 left-8 h-[24px] w-[24px] bg-zinc-500 dark:bg-zinc-400 dark:hover:bg-zinc-300 hover:bg-zinc-600 transition rounded-full p-1 flex items-center justify-center"
                   >
@@ -61,6 +64,7 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                   </button>
                   <Input
                     className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
+                    disabled={isLoading}
                     placeholder={`Message ${
                       type === "conversation" ? name : "#" + name
                     }`}
