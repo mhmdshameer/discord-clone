@@ -9,9 +9,10 @@ export async function GET(req: Request) {
   try {
     const profile = await currentProfile();
     const { searchParams } = new URL(req.url);
-
+    
     const cursor = searchParams.get("cursor");
     const channelId = searchParams.get("channelId");
+    console.log("cursor:",cursor,"channelId:",channelId);
 
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -19,7 +20,7 @@ export async function GET(req: Request) {
     if (!channelId) {
       return new NextResponse("Channel ID missing", { status: 400 });
     }
-
+console.log("channelID:",channelId);
     let messages: Message[] = [];
 
     if (cursor) {

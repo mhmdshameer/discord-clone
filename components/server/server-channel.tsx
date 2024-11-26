@@ -31,6 +31,7 @@ export const ServerChannel = ({
   const Icon = iconMap[channel.type];
 
   const onClick = ()=>{
+    console.log("channelId:",channel.id)
     router.push(`/servers/${params?.serverId}/channels/${channel.id}`) 
   }
 
