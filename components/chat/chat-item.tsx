@@ -3,9 +3,10 @@
 import { Member, MemberRole, Profile } from "@prisma/client";
 import { UserAvatar } from "../user-avatar";
 import { ActionTooltip } from "../action-tooltip";
-import { FileIcon, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Edit, FileIcon, ShieldAlert, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 interface ChatItemProps {
   id: string;
@@ -41,10 +42,13 @@ export const ChatItem = ({
   socketQuery,
 }: ChatItemProps) => {
   const [fileType, setFileType] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const getFileTypeFromUrl = async (url: string) => {
     try {
       const response = await fetch(url, { method: "HEAD" });
+      console.log("response:", response);
       const contentType = response.headers.get("content-type");
       if (contentType) {
         if (contentType.startsWith("image/")) {
@@ -110,21 +114,37 @@ export const ChatItem = ({
             </a>
           )}
           {isPDF && (
-              <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
-                <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
-                <a
-                  href={fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
-                >
-                  PDF file
-                </a>
-              </div>
-           
+            <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
+              <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
+              <a
+                href={fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
+              >
+                PDF file
+              </a>
+            </div>
+          )}
+          {!fileUrl && !isEditing && (
+            <p
+              className={cn(
+                "text-sm text-zinc-600 dark:text-zinc-300",
+                deleted &&
+                  "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+              )}
+            >
+              {content}
+              {isUpdated && !deleted && (
+                <span className="text-[10px] mx-2 text-zinc-500 dark:text-zinc-400">
+                  (edited)
+                </span>
+              )}
+            </p>
           )}
         </div>
       </div>
+     
     </div>
   );
 };
