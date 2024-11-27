@@ -91,6 +91,7 @@ export default async function handler(
     }
 
     if (req.method === "DELETE") {
+      console.log("Reached the delete session")
       message = await prisma.message.update({
         where: {
           id: messageId as string,

@@ -15,6 +15,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import queryString from "query-string";
 import axios from "axios";
+import { useModal } from "@/hooks/use-modal-store";
 
 interface ChatItemProps {
   id: string;
@@ -55,7 +56,8 @@ export const ChatItem = ({
 }: ChatItemProps) => {
   const [fileType, setFileType] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+
+  const {onOpen }= useModal();
 
   useEffect(()=>{
     const handleKeyDown = (event:any) => {
@@ -241,7 +243,10 @@ export const ChatItem = ({
             </ActionTooltip>
           )}
           <ActionTooltip label="Delete">
-            <Trash className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 dark:hover:text-zinc-400 hover:text-zinc-600" />
+            <Trash onClick={()=> onOpen("deleteMessage", {
+              apiUrl: `${socketUrl}/${id}`,
+              query: socketQuery
+            })} className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 dark:hover:text-zinc-400 hover:text-zinc-600" />
           </ActionTooltip>
         </div>
       )}
