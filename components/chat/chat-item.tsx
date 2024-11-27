@@ -16,6 +16,8 @@ import { Button } from "../ui/button";
 import queryString from "query-string";
 import axios from "axios";
 import { useModal } from "@/hooks/use-modal-store";
+import EmojiPicker from "@emoji-mart/react";
+import { useParams, useRouter } from "next/navigation";
 
 interface ChatItemProps {
   id: string;
@@ -57,19 +59,27 @@ export const ChatItem = ({
   const [fileType, setFileType] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  const {onOpen }= useModal();
+  const { onOpen } = useModal();
+  const params = useParams();
+  const router = useRouter();
 
-  useEffect(()=>{
-    const handleKeyDown = (event:any) => {
-        if(event.key === "Escape" || event.keyCode === 27){
-            setIsEditing(false);
-        }
+  const onMemberClick = () => {
+    if(member.id=== currentMember.id) return
+
+    router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Escape" || event.keyCode === 27) {
+        setIsEditing(false);
+      }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
-  },[])
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -118,31 +128,31 @@ export const ChatItem = ({
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async (values:z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-        const url = queryString.stringifyUrl({
-            url:`${socketUrl}/${id}`,
-            query: socketQuery
-        });
-        await axios.patch(url, values);
+      const url = queryString.stringifyUrl({
+        url: `${socketUrl}/${id}`,
+        query: socketQuery,
+      });
+      await axios.patch(url, values);
 
-        form.reset();
-        setIsEditing(false);
+      form.reset();
+      setIsEditing(false);
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   };
 
   return (
     <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
       <div className="group flex gap-x-2 items-start w-full">
-        <div className="cursor-pointer hover:drop-shadow-md transition">
+        <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
           <UserAvatar src={member.profile.imageUrl} />
         </div>
         <div className="flex flex-col w-full">
           <div className="flex items-center gap-x-2">
             <div className="flex items-center">
-              <p className="font-semibold text-sm hover:underline cursor-pointer">
+              <p onClick={onMemberClick} className="font-semibold text-sm hover:underline cursor-pointer">
                 {member.profile.name}
               </p>
               <ActionTooltip label={member.role}>
@@ -211,7 +221,7 @@ export const ChatItem = ({
                       <FormControl>
                         <div className="relative w-full">
                           <Input
-                          disabled={isLoading}
+                            disabled={isLoading}
                             className="p-2 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                             placeholder="Edited message"
                             {...field}
@@ -222,7 +232,7 @@ export const ChatItem = ({
                   )}
                 />
                 <Button disabled={isLoading} size="sm" variant="primary">
-                    Save
+                  Save
                 </Button>
               </form>
               <span className="text-[10px] mt-1 text-zinc-400">
@@ -243,10 +253,15 @@ export const ChatItem = ({
             </ActionTooltip>
           )}
           <ActionTooltip label="Delete">
-            <Trash onClick={()=> onOpen("deleteMessage", {
-              apiUrl: `${socketUrl}/${id}`,
-              query: socketQuery
-            })} className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 dark:hover:text-zinc-400 hover:text-zinc-600" />
+            <Trash
+              onClick={() =>
+                onOpen("deleteMessage", {
+                  apiUrl: `${socketUrl}/${id}`,
+                  query: socketQuery,
+                })
+              }
+              className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 dark:hover:text-zinc-400 hover:text-zinc-600"
+            />
           </ActionTooltip>
         </div>
       )}
