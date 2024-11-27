@@ -85,7 +85,6 @@ export const ChatItem = ({
   const getFileTypeFromUrl = async (url: string) => {
     try {
       const response = await fetch(url, { method: "HEAD" });
-      console.log("response:", response);
       const contentType = response.headers.get("content-type");
       if (contentType) {
         if (contentType.startsWith("image/")) {
@@ -123,8 +122,10 @@ export const ChatItem = ({
             url:`${socketUrl}/${id}`,
             query: socketQuery
         });
-
         await axios.patch(url, values);
+
+        form.reset();
+        setIsEditing(false);
     } catch (error) {
         console.log(error)
     }
