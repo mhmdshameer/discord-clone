@@ -94,7 +94,7 @@ export const ChatMessages = ({
           {isFetchingNextPage ? (
             <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4" />
           ) : (
-            <button className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 text-xs my-4 transition">
+            <button onClick={()=> fetchNextPage()} className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 text-xs my-4 transition">
               Load previous message
             </button>
           )}
