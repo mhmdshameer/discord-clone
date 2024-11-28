@@ -14,59 +14,61 @@ export default async function handler(
 
   try {
     const profile = await currentProfilePages(req);
-    const { messageId, serverId, channelId } = req.query;
-    const content = req.body;
+    const { directMessageId, conversationId } = req.query;
+    const {content} = req.body;
 
     if (!profile) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    if (!serverId) {
-      return res.status(400).json({ error: "Server ID missing" });
+    if (!conversationId) {
+      return res.status(400).json({ error: "Conversation ID missing" });
     }
-    if (!channelId) {
-      return res.status(400).json({ error: "Channel ID missing" });
-    }
+    
 
-    const server = await prisma.server.findFirst({
-      where: {
-        id: serverId as string,
-        members: {
-          some: {
-            profileId: profile.id,
+    const conversation = await prisma.conversation.findFirst({
+      where:{
+        id: conversationId as string,
+        OR:[
+          {
+            memberOne:{
+              profileId: profile.id,
+            }
           },
+          {
+            memberTwo:{
+              profileId: profile.id
+            }
+          }
+        ]
+      },
+      include:{
+        memberOne:{
+          include:{
+            profile: true,
+          }
         },
-      },
-      include: {
-        members: true,
-      },
+        memberTwo:{
+          include:{
+            profile: true,
+          }
+        }
+      }
     });
 
-    if (!server) {
-      return res.status(404).json({ error: "Server not found" });
+    if(!conversation){
+      return res.status(404).json({ error: "Conversation not found" });
     }
 
-    const channel = await prisma.channel.findFirst({
-      where: {
-        id: channelId as string,
-        serverId: serverId as string,
-      },
-    });
-    if (!channel) {
-      return res.status(404).json({ error: "Channel not found" });
-    }
-
-    const member = server.members.find((member) => {
-        return member.profileId === profile.id
-    });
+    const member = conversation.memberOne.profileId === profile.id ? conversation.memberOne : conversation.memberTwo;
 
     if (!member) {
       return res.status(404).json({ error: "Member not found" });
     }
 
-    let message = await prisma.message.findFirst({
+    let message = await prisma.directMessage.findFirst({
       where: {
-        id: messageId as string,
-        channelId: channelId as string,
+        id: directMessageId as string,
+        conversationId: conversationId as string,
       },
       include: {
         member: {
@@ -77,7 +79,7 @@ export default async function handler(
       },
     });
 
-    if (!message || message.delete) {
+    if (!message || message.deleted) {
       return res.status(404).json({ error: "Message not found" });
     }
 
@@ -92,14 +94,14 @@ export default async function handler(
 
     if (req.method === "DELETE") {
       console.log("Reached the delete session")
-      message = await prisma.message.update({
+      message = await prisma.directMessage.update({
         where: {
-          id: messageId as string,
+          id: directMessageId as string,
         },
         data: {
           fileUrl: null,
           content: "This message has been deleted.",
-          delete: true,
+          deleted: true,
         },
         include: {
           member: {
@@ -116,13 +118,12 @@ export default async function handler(
         return res.status(401).json({ error: "Unauthorized" });
       }
           console.log("Content:",content)
-          const updatedContent = content.content;
-          message = await prisma.message.update({
+          message = await prisma.directMessage.update({
             where: {
-              id: messageId as string,
+              id: directMessageId as string,
             },
             data: {
-              content:updatedContent,
+              content,
             },
             include: {
               member: {
@@ -135,7 +136,7 @@ export default async function handler(
         }
         
         console.log("Message Update:",message)
-        const updateKey = `chat:${channelId}:messages:update`;
+        const updateKey = `chat:${conversation.id}:messages:update`;
         
         res?.socket?.server?.io?.emit(updateKey, message);
         

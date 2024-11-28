@@ -15,7 +15,7 @@ export default async function handler(
   try {
     const profile = await currentProfilePages(req);
     const { messageId, serverId, channelId } = req.query;
-    const content = req.body;
+    const {content} = req.body;
 
     if (!profile) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -116,13 +116,12 @@ export default async function handler(
         return res.status(401).json({ error: "Unauthorized" });
       }
           console.log("Content:",content)
-          const updatedContent = content.content;
           message = await prisma.message.update({
             where: {
               id: messageId as string,
             },
             data: {
-              content:updatedContent,
+              content,
             },
             include: {
               member: {
