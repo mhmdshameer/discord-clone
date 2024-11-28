@@ -19,6 +19,7 @@ export default async function handler(
 
      console.log("fileUrl:",fileUrl)
     if (!profile) return res.status(401).json({ message: "Unauthorized" });
+     
     if (!conversationId  || !content) {
       return res.status(400).json({ message: "Invalid input" });
     }

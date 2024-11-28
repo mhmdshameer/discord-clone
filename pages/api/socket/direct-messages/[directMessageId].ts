@@ -65,7 +65,7 @@ export default async function handler(
       return res.status(404).json({ error: "Member not found" });
     }
 
-    let message = await prisma.directMessage.findFirst({
+    let directMessage = await prisma.directMessage.findFirst({
       where: {
         id: directMessageId as string,
         conversationId: conversationId as string,
@@ -79,11 +79,11 @@ export default async function handler(
       },
     });
 
-    if (!message || message.deleted) {
+    if (!directMessage || directMessage.deleted) {
       return res.status(404).json({ error: "Message not found" });
     }
 
-    const isMessageOwner = message.memberId === member.id;
+    const isMessageOwner = directMessage.memberId === member.id;
     const isAdmin = member.role === MemberRole.ADMIN;
     const isModerator = member.role === MemberRole.MODERATOR;
     const canModify = isMessageOwner || isAdmin || isModerator;
@@ -94,14 +94,14 @@ export default async function handler(
 
     if (req.method === "DELETE") {
       console.log("Reached the delete session")
-      message = await prisma.directMessage.update({
+      directMessage = await prisma.directMessage.update({
         where: {
           id: directMessageId as string,
         },
         data: {
           fileUrl: null,
           content: "This message has been deleted.",
-          deleted: true,
+          delete: true,
         },
         include: {
           member: {
@@ -118,7 +118,7 @@ export default async function handler(
         return res.status(401).json({ error: "Unauthorized" });
       }
           console.log("Content:",content)
-          message = await prisma.directMessage.update({
+          directMessage = await prisma.directMessage.update({
             where: {
               id: directMessageId as string,
             },
@@ -135,12 +135,12 @@ export default async function handler(
           })     
         }
         
-        console.log("Message Update:",message)
+        console.log("Message Update:",directMessage)
         const updateKey = `chat:${conversation.id}:messages:update`;
         
-        res?.socket?.server?.io?.emit(updateKey, message);
+        res?.socket?.server?.io?.emit(updateKey, directMessage);
         
-        return res.status(200).json(message);
+        return res.status(200).json(directMessage);
       } catch (error) {
         console.log("[MESSAGE_ID]", error);
         return res.status(500).json({ error: "internal error" });

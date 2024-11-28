@@ -16,7 +16,6 @@ import { Button } from "../ui/button";
 import queryString from "query-string";
 import axios from "axios";
 import { useModal } from "@/hooks/use-modal-store";
-import EmojiPicker from "@emoji-mart/react";
 import { useParams, useRouter } from "next/navigation";
 
 interface ChatItemProps {
